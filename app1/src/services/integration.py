@@ -1,5 +1,6 @@
 from random import choice
 from typing import List
+import aiohttp
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.logs import Log
@@ -10,6 +11,10 @@ from schemas.query import QueryForServer
 async def write_log(log: Log, db: AsyncSession) -> None:
     """Пишет переданный лог в базу."""
 
+    print(type(log.cadastral_number))
+    print(type(log.latitude))
+    print(type(log.longitude))
+    print(type(log.response))
     db.add(log)
     await db.commit()
 
@@ -17,12 +22,16 @@ async def write_log(log: Log, db: AsyncSession) -> None:
 async def send_coords(query_data: QueryForServer, db: AsyncSession) -> bool:
     """Отправляет координаты на сторонний API."""
 
-    response = choice([True, False])
-
     data = query_data.model_dump()
+
+    async with aiohttp.ClientSession() as session:
+        async with session.post("http://app2:8000/", json=data) as response:
+            response = await response.json()
+
     data["response"] = response
 
     await write_log(Log(**data), db)
+    
     return response
 
 
