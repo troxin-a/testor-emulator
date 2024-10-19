@@ -7,8 +7,8 @@ from config.db import Base
 class Log(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     cadastral_number: Mapped[str]
-    latitude: Mapped[str]
-    longitude: Mapped[str]
+    latitude: Mapped[float]
+    longitude: Mapped[float]
     time_request: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
