@@ -24,7 +24,7 @@ async def index():
     summary="Отправить запрос",
     description="Отправляет запрос на сторонний сервер, в ответ True или False.",
 )
-async def query(query_data: QueryForServer, db: AsyncSession = Depends(get_db)) -> bool:
+async def query(query_data: QueryForServer, db: AsyncSession = Depends(get_db)) -> bool | dict:
     return await send_coords(query_data, db)
 
 
