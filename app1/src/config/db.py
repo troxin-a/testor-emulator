@@ -21,3 +21,8 @@ class Base(AsyncAttrs, DeclarativeBase):
         table_name = cls.__name__ + "s"
         table_name = re.sub(r"(?<!^)(?=[A-Z])", "_", table_name)
         return table_name.lower()
+
+
+async def get_db():
+    async with async_session_maker() as db:
+        yield db

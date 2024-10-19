@@ -1,0 +1,36 @@
+from random import choice
+from typing import List
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from models.logs import Log
+from schemas.logs import LogHistory
+from schemas.query import QueryForServer
+
+
+async def write_log(log: Log, db: AsyncSession) -> None:
+    """Пишет переданный лог в базу."""
+
+    db.add(log)
+    await db.commit()
+
+
+async def send_coords(query_data: QueryForServer, db: AsyncSession) -> bool:
+    """Отправляет координаты на сторонний API."""
+
+    response = choice([True, False])
+
+    data = query_data.model_dump()
+    data["response"] = response
+
+    await write_log(Log(**data), db)
+    return response
+
+
+async def get_logs(db: AsyncSession) -> List[LogHistory]:
+    """Получает историю запросов к стороннему API с результатом."""
+
+    query = select(Log)
+    response = await db.execute(query)
+
+    logs = response.scalars().all()
+    return logs
