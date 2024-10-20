@@ -6,7 +6,11 @@ from config.settings import settings
 
 engine = create_async_engine(settings.db.url)
 
-async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
+async_session_maker = async_sessionmaker(
+    bind=engine,
+    expire_on_commit=False,
+    autoflush=False,
+)
 
 
 class Base(AsyncAttrs, DeclarativeBase):

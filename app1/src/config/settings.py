@@ -18,8 +18,15 @@ class DatabaseSettings(BaseSettings):
         )
 
 
+class JWTSettings(BaseSettings):
+    secret_key: str
+    algoritm: str
+    access_token_expire_minutes: int
+
+
 class Settings(BaseSettings):
     db: DatabaseSettings = DatabaseSettings()
+    jwt: JWTSettings = JWTSettings(algoritm="HS256", access_token_expire_minutes=30)
 
     title: str = "Testor-emulator"
     version: str = "0.1.0"

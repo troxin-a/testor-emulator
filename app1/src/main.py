@@ -1,36 +1,10 @@
-from typing import List
-from fastapi import Depends, FastAPI
-from sqlalchemy.ext.asyncio import AsyncSession
-from config.db import get_db
+from fastapi import FastAPI
 from config.settings import settings
-from schemas.logs import LogHistory
-from schemas.query import QueryForServer
-from services.integration import get_logs, send_coords
+from api.base import base_router
+from api.users import users_router
 
 
 app = FastAPI(**settings.model_dump())
 
-
-@app.get(
-    "/ping",
-    summary="Проверка на доступность",
-)
-async def index():
-    return True
-
-
-@app.post(
-    "/query",
-    summary="Отправить запрос",
-    description="Отправляет запрос на сторонний сервер, в ответ True или False.",
-)
-async def query(query_data: QueryForServer, db: AsyncSession = Depends(get_db)) -> bool | dict:
-    return await send_coords(query_data, db)
-
-
-@app.get(
-    "/history",
-    summary="История запросов",
-)
-async def get_history(db: AsyncSession = Depends(get_db)) -> List[LogHistory]:
-    return await get_logs(db)
+app.include_router(base_router)
+app.include_router(users_router)
