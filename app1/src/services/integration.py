@@ -34,10 +34,14 @@ async def send_coords(query_data: QueryForServer, db: AsyncSession) -> bool:
     return response
 
 
-async def get_logs(db: AsyncSession) -> List[LogHistory]:
+async def get_logs(db: AsyncSession, number) -> List[LogHistory]:
     """Получает историю запросов к стороннему API с результатом."""
 
     query = select(Log)
+
+    if number:
+        query = query.where(Log.cadastral_number == number)
+
     response = await db.execute(query)
 
     logs = response.scalars().all()
