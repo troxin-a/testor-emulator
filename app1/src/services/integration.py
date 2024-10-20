@@ -21,7 +21,7 @@ async def send_coords(query_data: QueryForServer, db: AsyncSession) -> bool:
 
     async with aiohttp.ClientSession() as session:
         try:
-            async with session.post("http://app2:8000/", json=data) as response:
+            async with session.post("http://app2:8000/result", json=data) as response:
                 response = await response.json()
         except aiohttp.ClientConnectionError:
             response = {"message": "Второй сервер не отвечает"}

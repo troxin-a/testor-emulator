@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from models.logs import Log  # noqa # pylint:disable=unused-import
+from models.users import User  # noqa # pylint:disable=unused-import
 
 from config.settings import settings
 from config.db import Base

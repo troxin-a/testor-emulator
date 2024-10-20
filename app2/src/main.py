@@ -8,7 +8,7 @@ from schemas.coords import Coords
 app = FastAPI()
 
 
-@app.post("/")
+@app.post("/result")
 async def index(coords: Coords):
 
     await asyncio.sleep(randint(0, 5))  # Рекламная пауза

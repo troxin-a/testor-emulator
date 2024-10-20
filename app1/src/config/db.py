@@ -1,6 +1,6 @@
 import re
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, declared_attr
+from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
 from config.settings import settings
 
@@ -13,6 +13,8 @@ class Base(AsyncAttrs, DeclarativeBase):
     """Базовый класс для всех моделей"""
 
     __abstract__ = True
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
     @declared_attr.directive
     @classmethod

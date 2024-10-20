@@ -28,6 +28,9 @@ async def query(query_data: QueryForServer, db: AsyncSession = Depends(get_db)) 
     return await send_coords(query_data, db)
 
 
-@app.get("/history")
+@app.get(
+    "/history",
+    summary="История запросов",
+)
 async def get_history(db: AsyncSession = Depends(get_db)) -> List[LogHistory]:
     return await get_logs(db)

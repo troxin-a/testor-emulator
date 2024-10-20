@@ -5,7 +5,6 @@ from config.db import Base
 
 
 class Log(Base):
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     cadastral_number: Mapped[str]
     latitude: Mapped[float]
     longitude: Mapped[float]
