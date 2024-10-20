@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres
+    restart: on-failure
+    expose:
+      - 5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    env_file: 
+      - ".env"
+
+  app1:
+    build: app1/.
+    tty: true
+    # command: fastapi run src/main.py --workers 4 --host 0.0.0.0 --port 8000
+    command: fastapi dev src/main.py --host 0.0.0.0 --port 8000
+    volumes:
+      - ./app1:/app
+    ports:
+      - "8000:8000"
+    env_file: 
+      - ".env"
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+  app2:
+    build: app2/.
+    tty: true
+    # command: fastapi run src/main.py --workers 4 --host 0.0.0.0 --port 8000
+    command: fastapi dev src/main.py --host 0.0.0.0 --port 8000
+    volumes:
+      - ./app2:/app
+    expose:
+      - 8000
+
+
+volumes:
+  pg_data:
